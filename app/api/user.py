@@ -5,14 +5,21 @@ from app.database import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate
 
+from app.core.security import hash_password
+
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.post("/")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
+
+    hashed_password = hash_password(user.password)
+
+    print("HASH GENERATED:", hashed_password)
+
     new_user = User(
         email=user.email,
-        password_hash=user.password
+        password_hash=hashed_password
     )
 
     db.add(new_user)
@@ -21,5 +28,6 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
     return {
         "id": new_user.id,
-        "email": new_user.email
+        "email": new_user.email,
+
     }

@@ -8,8 +8,6 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Webhook Delivery Platform")
 app.include_router(users_router)
-
-
 @app.get("/")
 def root():
     return {"message": "Webhook Platform is running"}
