@@ -2,6 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+import httpx
 
 from app.database import get_db
 from app.models.webhooks import Webhook
@@ -49,5 +50,18 @@ def create_event(
     db.add(event)
     db.commit()
     db.refresh(event)
+
+    delivery_payload = {
+        "event_type": event.event_type,
+        "payload": event.payload
+    }
+
+    response = httpx.post(
+        webhook.url,
+        json=delivery_payload,
+        timeout=5.0
+    )
+
+    print("Webhook response status:", response.status_code)
 
     return event
