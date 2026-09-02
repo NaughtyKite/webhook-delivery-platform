@@ -4,6 +4,7 @@ from app.database import Base, engine
 from app.models.user import User
 from app.models.webhooks import Webhook
 from app.models.events import Event
+from app.models.delivery_attempts import DeliveryAttempt
 
 from app.api.user import router as users_router
 from app.api.auth import router as auth_router
